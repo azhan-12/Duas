@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>70,000 Zikr Tracker</title>
+
+<style>
+*{box-sizing:border-box;}
+
+body{
+    margin:0;
+    font-family:Arial, sans-serif;
+    background:#0a0a0a;
+    color:white;
+    height:100vh;
+    overflow:hidden;
+}
+
+/* Top Date Bar */
+.topBar{
+    background:#001f3f;
+    color:#00aaff;
+    padding:12px;
+    text-align:center;
+    font-weight:bold;
+}
+
+/* Layout */
+.wrapper{
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    height:calc(100vh - 50px);
+}
+
+.card{
+    background:#111;
+    width:100%;
+    max-width:500px;
+    height:95%;
+    padding:20px;
+    border-radius:15px;
+    display:flex;
+    flex-direction:column;
+}
+
+/* Header */
+.header{text-align:center;}
+
+.fastNumber{
+    color:#00ff88;
+    font-weight:bold;
+    margin-bottom:10px;
+}
+
+/* Circle */
+.circle{
+    width:200px;
+    height:200px;
+    margin:15px auto;
+    border-radius:50%;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    position:relative;
+    background:conic-gradient(#00ff88 0deg,#222 0deg);
+}
+
+.circle::before{
+    content:"";
+    position:absolute;
+    width:140px;
+    height:140px;
+    background:#111;
+    border-radius:50%;
+}
+
+.centerText{
+    position:absolute;
+    font-size:14px;
+    font-weight:bold;
+    text-align:center;
+}
+
+/* Input */
+input{
+    width:100%;
+    padding:10px;
+    border:none;
+    border-radius:8px;
+    margin-top:10px;
+    text-align:center;
+}
+
+/* Buttons */
+.btnGroup{
+    text-align:center;
+    margin-top:10px;
+}
+
+button{
+    padding:8px 18px;
+    border:none;
+    border-radius:8px;
+    font-weight:bold;
+    cursor:pointer;
+    margin:5px;
+}
+
+.addBtn{background:#00ff88;}
+.resetBtn{background:#ff4444;color:white;}
+
+/* Day List Scroll Only */
+.dayBox{
+    margin-top:15px;
+    background:#0f0f0f;
+    padding:12px;
+    border-radius:10px;
+    flex:1;
+    overflow-y:auto;
+}
+
+/* Mobile */
+@media(max-width:480px){
+    .circle{width:160px;height:160px;}
+    .circle::before{width:110px;height:110px;}
+}
+</style>
+</head>
+
+<body>
+
+<div class="topBar" id="dateTime"></div>
+
+<div class="wrapper">
+<div class="card">
+
+<div class="header">
+<h2>La Ilaha Illallah (70,000)</h2>
+<div class="fastNumber" id="fastNumber"></div>
+</div>
+
+<div class="circle" id="circle">
+    <div class="centerText" id="circleText">
+        Completed: 0<br>
+        Remaining: 70000
+    </div>
+</div>
+
+<input type="number" id="input" placeholder="Enter today's count">
+
+<div class="btnGroup">
+    <button class="addBtn" onclick="add()">Add</button>
+    <button class="resetBtn" onclick="resetAll()">Reset</button>
+</div>
+
+<div class="dayBox" id="dayList"></div>
+
+</div>
+</div>
+
+<script>
+let total = 70000;
+let remaining = parseInt(localStorage.getItem("remaining")) || 70000;
+let days = JSON.parse(localStorage.getItem("days")) || [];
+
+/* Live Date */
+function updateDateTime(){
+    let now = new Date();
+    document.getElementById("dateTime").innerText =
+        now.toDateString() + " | " + now.toLocaleTimeString();
+}
+setInterval(updateDateTime,1000);
+updateDateTime();
+
+/* Calculate Fast Day */
+function getFastDay(){
+    let ramadanStart = new Date("2026-02-19"); // change if needed
+    let now = new Date();
+    let diff = now - ramadanStart;
+    return Math.floor(diff/(1000*60*60*24)) + 1;
+}
+
+/* Update Fast Label */
+function updateFastNumber(){
+    let fastDay = getFastDay();
+    if(fastDay>=1 && fastDay<=30){
+        document.getElementById("fastNumber").innerText =
+            "Today Fast: " + fastDay;
+    }else{
+        document.getElementById("fastNumber").innerText =
+            "Ramadan Not Active";
+    }
+}
+
+/* Enter Key */
+document.getElementById("input").addEventListener("keypress",function(e){
+    if(e.key==="Enter") add();
+});
+
+/* Add Function */
+function add(){
+    let fastDay = getFastDay();
+
+    let value = parseInt(document.getElementById("input").value);
+    if(isNaN(value)||value<=0) return;
+
+    remaining -= value;
+    if(remaining<0) remaining=0;
+
+    let existing = days.find(d=>d.day===fastDay);
+    if(existing){
+        existing.count += value;
+    }else{
+        days.push({day:fastDay,count:value});
+    }
+
+    localStorage.setItem("remaining",remaining);
+    localStorage.setItem("days",JSON.stringify(days));
+
+    updateUI();
+    updateFastNumber();
+    document.getElementById("input").value="";
+}
+
+/* Update UI */
+function updateUI(){
+    let completed = total - remaining;
+    let progress = (completed/total)*360;
+
+    document.getElementById("circle").style.background =
+        `conic-gradient(#00ff88 ${progress}deg,#222 ${progress}deg)`;
+
+    document.getElementById("circleText").innerHTML =
+        "Completed: "+completed+"<br>"+
+        "Remaining: "+remaining;
+
+    let list="";
+    days.sort((a,b)=>a.day-b.day);
+    days.forEach(d=>{
+        list+="Fast "+d.day+" : "+d.count+"<br>";
+    });
+
+    document.getElementById("dayList").innerHTML=list;
+}
+
+/* Reset */
+function resetAll(){
+    if(confirm("Reset everything?")){
+        remaining=70000;
+        days=[];
+        localStorage.clear();
+        updateUI();
+    }
+}
+
+updateUI();
+updateFastNumber();
+setInterval(updateFastNumber,60000);
+</script>
+
+</body>
+</html>
