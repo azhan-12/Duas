@@ -2,7 +2,7 @@
 <html>
 <head>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>La Ilaha Illallah Tracker</title>
+<title>Astaghfirullah Tracker</title>
 
 <style>
 *{box-sizing:border-box;margin:0;padding:0;font-family:'Segoe UI',sans-serif;}
@@ -122,13 +122,13 @@ overflow-y:auto;
 <div class="card">
 
 <div class="header">
-<h2>La Ilaha Illallah (70,000)</h2>
+<h2>Astaghfirullah (100,000)</h2>
 </div>
 
 <div class="circle" id="circle">
 <div class="centerText" id="circleText">
 Completed: 0<br>
-Remaining: 70000
+Remaining: 100000
 </div>
 </div>
 
@@ -145,9 +145,9 @@ Remaining: 70000
 </div>
 
 <script>
-let total = 70000;
-let remaining = parseInt(localStorage.getItem("la_remaining")) || 70000;
-let days = JSON.parse(localStorage.getItem("la_days")) || [];
+let total = 100000;
+let remaining = parseInt(localStorage.getItem("ast_remaining")) || 100000;
+let days = JSON.parse(localStorage.getItem("ast_days")) || [];
 
 function updateDateTime(){
 let now = new Date();
@@ -169,8 +169,8 @@ let existing = days.find(d=>d.date===today);
 if(existing){ existing.count += value; }
 else{ days.push({date:today,count:value}); }
 
-localStorage.setItem("la_remaining",remaining);
-localStorage.setItem("la_days",JSON.stringify(days));
+localStorage.setItem("ast_remaining",remaining);
+localStorage.setItem("ast_days",JSON.stringify(days));
 
 updateUI();
 document.getElementById("input").value="";
@@ -195,10 +195,10 @@ document.getElementById("dayList").innerHTML=list;
 
 function resetAll(){
 if(confirm("Reset everything?")){
-remaining=70000;
+remaining=100000;
 days=[];
-localStorage.removeItem("la_remaining");
-localStorage.removeItem("la_days");
+localStorage.removeItem("ast_remaining");
+localStorage.removeItem("ast_days");
 updateUI();
 }
 }
