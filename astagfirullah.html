@@ -6,35 +6,48 @@
 
 <style>
 *{box-sizing:border-box;margin:0;padding:0;font-family:'Segoe UI',sans-serif;}
+
 body{
 height:100vh;
-background:linear-gradient(135deg,#001f3f,#000814,#003566);
+background:linear-gradient(135deg,#000814,#001d3d,#003566);
 color:white;
 display:flex;
 flex-direction:column;
 }
+
 .topBar{
-background:rgba(0,0,0,0.5);
+background:rgba(0,0,0,0.6);
 padding:12px;
 text-align:center;
 font-weight:bold;
 color:#00e5ff;
+letter-spacing:1px;
 }
+
 .navBar{
 display:flex;
 justify-content:center;
 gap:10px;
-padding:10px;
+padding:12px;
+flex-wrap:wrap;
 }
+
 .navBar a{
 text-decoration:none;
-padding:8px 14px;
-border-radius:20px;
+padding:8px 16px;
+border-radius:25px;
 background:#00e5ff;
 color:black;
 font-weight:bold;
 font-size:14px;
+transition:0.3s;
 }
+
+.navBar a:hover{
+background:#00ffcc;
+transform:scale(1.05);
+}
+
 .wrapper{
 flex:1;
 display:flex;
@@ -42,21 +55,30 @@ justify-content:center;
 align-items:center;
 padding:10px;
 }
+
 .card{
 width:100%;
 max-width:500px;
 height:95%;
-background:rgba(255,255,255,0.05);
-backdrop-filter:blur(15px);
-border-radius:20px;
-padding:20px;
+background:rgba(255,255,255,0.06);
+backdrop-filter:blur(18px);
+border-radius:25px;
+padding:25px;
 display:flex;
 flex-direction:column;
+box-shadow:0 0 25px rgba(0,255,255,0.2);
 }
-.header{text-align:center;}
+
+.header{
+text-align:center;
+margin-bottom:10px;
+color:#00ffcc;
+text-shadow:0 0 10px #00ffcc;
+}
+
 .circle{
-width:220px;
-height:220px;
+width:230px;
+height:230px;
 margin:15px auto;
 border-radius:50%;
 display:flex;
@@ -64,47 +86,83 @@ justify-content:center;
 align-items:center;
 position:relative;
 background:conic-gradient(#00ff88 0deg,#111 0deg);
+box-shadow:0 0 25px #00ff88;
+transition:0.5s;
 }
+
 .circle::before{
 content:"";
 position:absolute;
-width:160px;
-height:160px;
+width:170px;
+height:170px;
 background:#001f3f;
 border-radius:50%;
 }
+
 .centerText{
 position:absolute;
 text-align:center;
-font-size:14px;
+font-size:15px;
 font-weight:bold;
 }
+
 input{
 width:100%;
-padding:10px;
+padding:12px;
 border:none;
-border-radius:10px;
+border-radius:15px;
 text-align:center;
-margin-top:10px;
+margin-top:15px;
+font-size:15px;
+outline:none;
 }
-.btnGroup{text-align:center;margin-top:10px;}
+
+input:focus{
+box-shadow:0 0 15px #00ffcc;
+}
+
+.btnGroup{
+text-align:center;
+margin-top:15px;
+}
+
 button{
-padding:8px 18px;
+padding:10px 22px;
 border:none;
-border-radius:20px;
+border-radius:25px;
 font-weight:bold;
 cursor:pointer;
 margin:5px;
+transition:0.3s;
 }
-.addBtn{background:#00ff88;}
-.resetBtn{background:#ff4444;color:white;}
+
+.addBtn{
+background:#00ff88;
+}
+
+.addBtn:hover{
+background:#00ffcc;
+transform:scale(1.05);
+}
+
+.resetBtn{
+background:#ff4444;
+color:white;
+}
+
+.resetBtn:hover{
+background:#ff2222;
+transform:scale(1.05);
+}
+
 .dayBox{
 margin-top:15px;
 background:rgba(0,0,0,0.4);
-padding:12px;
-border-radius:10px;
+padding:15px;
+border-radius:15px;
 flex:1;
 overflow-y:auto;
+font-size:14px;
 }
 </style>
 </head>
@@ -116,6 +174,7 @@ overflow-y:auto;
 <a href="index.html">La Ilaha</a>
 <a href="astagfirullah.html">Astaghfirullah</a>
 <a href="ikhlas.html">Surah Ikhlas</a>
+<a href="allah99.html">99 Names</a>
 </div>
 
 <div class="wrapper">
@@ -204,6 +263,13 @@ updateUI();
 }
 
 updateUI();
+
+// Press Enter to Add
+document.getElementById("input").addEventListener("keypress", function(e){
+if(e.key === "Enter"){
+add();
+}
+});
 </script>
 
 </body>
